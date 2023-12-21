@@ -18,10 +18,9 @@ Within a proxied service's directory, create a symlink to the _letsencrypt_ dire
 An understanding of Traefik "labels" is essential when deploying proxied client services with Traefik.  
 Read more about "labels" here: [https://doc.traefik.io/traefik/routing/providers/docker/](https://doc.traefik.io/traefik/routing/providers/docker/)
 
-### USAGE:
+### USAGE
 
 ```
-
     ./deploy_traefik.sh [-logs | -stop | -H]  
 ```
 
@@ -60,5 +59,5 @@ Add any Traefik middleware items to the **dynamic/middlewares.toml** file.
 dumpcerts.acme.v2.sh is not my work, but is sourced and modified from 
 [https://github.com/hardware/mailserver](https://github.com/hardware/mailserver)
 under the MIT License (MIT).
-# Copyright (c) 2017 Brian 'redbeard' Harrington <redbeard@dead-city.org>
-#     https://github.com/hardware/mailserver/blob/master/rootfs/usr/local/bin/dumpcerts.acme.v2.sh
+Copyright (c) 2017 Brian 'redbeard' Harrington <redbeard@dead-city.org>
+https://github.com/hardware/mailserver/blob/master/rootfs/usr/local/bin/dumpcerts.acme.v2.sh

@@ -10,7 +10,7 @@ fi
 # Deploys a Docker Swarm instance with the Traefik Proxy service.
 # Traefik obtains and manages Letsencrypt certs for all hosts it proxies.
 # Traefik Proxy routes requests to other Docker conatiners. 
-# All services operate with public DNS hostnames.
+# All services can operate with public DNS hostnames.
 
 # ver: 21-dec-2023
 

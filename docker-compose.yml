@@ -1,0 +1,39 @@
+version: '3.6'
+services:
+  proxy:
+    image: traefik:${TRAEFIK_VER}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Persist Let's Encrypt certificates
+      - ./letsencrypt:/letsencrypt
+      # For Docker service discovery
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # For Traefik config
+      - ./traefik.toml:/etc/traefik/traefik.toml
+      # For Traefik dynamic config
+      - ./dynamic:/etc/traefik/dynamic
+    networks:
+      - traefik-public
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.enable=${TRAEFIKENABLE}   # needs to be true first time service is started, and everytime a new hostname is added, to ensure certs are generated - can be disable after first start.
+        - traefik.http.routers.proxy.entrypoints=websecure
+        - traefik.http.routers.proxy.rule=Host(`${TRAEFIK_HOST}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+        - traefik.http.routers.proxy.tls=true
+        - traefik.http.routers.proxy.tls.certresolver=letsencrypt
+        - traefik.http.routers.proxy.service=api@internal
+        - traefik.http.services.proxy.loadbalancer.server.port=1111
+        - traefik.http.middlewares.STSSeconds=31536000
+        - traefik.http.middlewares.STSIncludeSubdomains=true
+        - traefik.http.middlewares.STSPreload=true
+        # - traefik.http.middlewares=auth
+        # - traefik.http.middlewares.auth.basicauth.users=user:httpdpwd  # Dashboard user
+        # - traefik.http.routers.proxy.middlewares=my-whitelist@file # we apply our middleware
+
+
+networks:
+  traefik-public:
+    external: true

@@ -1,0 +1,50 @@
+[global]
+  checkNewVersion = false
+  sendAnonymousUsage = false
+
+[serversTransport]
+  insecureSkipVerify = true
+
+[log]
+#  level = "DEBUG"
+  level = "INFO"
+
+[api]
+  dashboard = false
+#  dashboard = true
+  insecure = false
+
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+
+  [entryPoints.web.http.redirections.entryPoint]
+    to = "websecure"
+    scheme = "https"
+
+  [entryPoints.websecure]
+    address = ":443"
+
+[providers]
+  providersThrottleDuration = 15
+  [providers.docker]
+    swarmMode = true
+    exposedByDefault = false
+    network = "traefik-public"
+      # this is really important when you have multiple networks on a
+      # single container. This will tell Traefik to always look for
+      # network traefik-public and not any other internal networks.
+
+  [providers.file]
+    watch = true
+    directory = "/etc/traefik/dynamic"
+
+[certificatesResolvers]
+  [certificatesResolvers.letsencrypt.acme]
+    email = "<email@address.com>"
+    storage = "/letsencrypt/acme.json"
+    [certificatesResolvers.letsencrypt.acme.tlsChallenge]
+
+[http.middlewares]
+  [http.middlewares.auth.basicAuth]
+    usersFile = "./usersfile"

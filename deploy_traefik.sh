@@ -12,7 +12,7 @@ fi
 # Traefik Proxy routes requests to other Docker conatiners. 
 # All services can operate with public DNS hostnames.
 
-# ver: 21-dec-2023
+# ver: 22-dec-2023
 
 # Setup environment
 cd "$(dirname "$0")"

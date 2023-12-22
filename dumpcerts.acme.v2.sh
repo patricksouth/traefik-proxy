@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash 
 #set -x
 # Copyright (c) 2017 Brian 'redbeard' Harrington <redbeard@dead-city.org>
 #     https://github.com/hardware/mailserver/blob/master/rootfs/usr/local/bin/dumpcerts.acme.v2.sh

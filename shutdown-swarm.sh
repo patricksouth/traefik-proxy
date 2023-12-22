@@ -8,3 +8,4 @@ fi
 
 
 #docker stack ls |grep traefik | grep Swarm
+

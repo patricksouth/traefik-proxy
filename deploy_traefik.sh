@@ -118,7 +118,7 @@ main() {
 
   # Traefik requires an overlay network for services to attached to.
   # Check for the existance of that overlay network.
-  if [ -z $(docker network ls |grep traefik-public) ]; then
+  if [[ -z $(docker network ls |grep traefik-public) ]]; then
     echo
     echo "Traefik Proxy Network not present ... creating"
     echo

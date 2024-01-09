@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -x
+set +x
 set -o errexit
 set -o nounset
 set -o pipefail
@@ -12,15 +12,15 @@ fi
 # Traefik Proxy routes requests to other Docker conatiners. 
 # All services can operate with public DNS hostnames.
 
-# ver: 22-dec-2023
+# ver: 09-jan-2024
 
 # Setup environment
 cd "$(dirname "$0")"
 export myservice=traefik
 
-if [[ ! -s "${myservice}.env" || ! -s "${myservice}.toml" ]]; then
+if [[ ! -s "traefik.env" || ! -s "traefik.toml" ]]; then
   echo
-  echo "    Missing ${myservice}.toml OR ${myservice}.env"
+  echo "    Missing traefik.toml OR traefik.env"
   echo "    Run the following commands"
   echo
   echo "    cp traefik.env.default traefik.env"
@@ -30,7 +30,7 @@ if [[ ! -s "${myservice}.env" || ! -s "${myservice}.toml" ]]; then
   echo
   exit
 fi
-source ./${myservice}.env
+source ./traefik.env
 
 USAGE="$(basename "$0") [-logs | -stop | -H]"
 
@@ -52,21 +52,21 @@ if [[ $# == 1 ]]; then
 
   if [[ "$upperARG" =~ ^-*L(OGS)?$ ]]; then  
     echo
-    docker service logs -f ${myservice}_proxy
+    docker service logs -f traefik_proxy
     exit 1
   fi
 
   if [[ "$upperARG" =~ ^-*S(TOP)?$ ]]; then
-    if [ "$(docker stack ls --format '{{.Name}}' | grep ${myservice})" ]; then
+    if [ "$(docker stack ls --format '{{.Name}}' | grep traefik)" ]; then
       echo
-      docker stack rm ${myservice}
+      docker stack rm traefik
       echo
-      echo ".... stopping ${myservice} ....."
+      echo ".... stopping traefik ....."
       echo
       sleep 7
     else
       echo
-      echo  "${myservice} not running"
+      echo  "traefik not running"
       echo
     fi
     exit 1
@@ -83,10 +83,10 @@ main() {
   fi
 
   # Pull Traefik image
-  if [ ! "$(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep ${myservice}:$TRAEFIK_VER)" == "traefik:$TRAEFIK_VER" ]; then
+  if [ ! "$(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep traefik:$TRAEFIK_VER)" == "traefik:$TRAEFIK_VER" ]; then
     echo
-    echo  "Pulling ${myservice}:"$TRAEFIK_VER
-    docker pull ${myservice}:${TRAEFIK_VER}
+    echo  "Pulling traefik:"$TRAEFIK_VER
+    docker pull traefik:${TRAEFIK_VER}
     sleep 1
   fi
 
@@ -119,8 +119,7 @@ main() {
 
   # Traefik requires an overlay network for services to attached to.
   # Check for the existance of that overlay network.
-  target=$(docker network ls |grep traefik-public)
-  if [ ! "${target}" ]; then
+  if [ -z $(docker network ls |grep traefik-public) ]; then
     echo
     echo "Traefik Proxy Network not present ... creating"
     echo
@@ -133,13 +132,12 @@ main() {
   echo "    To access the logs in stdout:"
   echo "    ./deploy_traefik.sh -logs"
   echo "        OR"
-  echo "    docker service logs -f ${myservice}_proxy"
+  echo "    docker service logs -f traefik_proxy"
   echo
 
-  docker stack deploy -c docker-compose.yml ${myservice}
-  docker service logs -f ${myservice}_proxy
-
-
+  docker stack deploy -c docker-compose.yml traefik
+  docker service logs -f traefik_proxy
 }
 
 main 
+

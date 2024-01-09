@@ -16,7 +16,6 @@ fi
 
 # Setup environment
 cd "$(dirname "$0")"
-export myservice=traefik
 
 if [[ ! -s "traefik.env" || ! -s "traefik.toml" ]]; then
   echo

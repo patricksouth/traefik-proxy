@@ -49,14 +49,12 @@ Thumbs.db
 *.wmv
 
 # Secrets
-secrets/
+letsencrypt/acme.json
 *.crt
 *.key
-acme.json
 
 # Env files
-*.env
-*.toml
-*.tar
-*.zip
-.vscode/extensions.json
+traefik.env
+usersfile.env
+traefik.toml
+
